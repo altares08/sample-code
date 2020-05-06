@@ -3,12 +3,19 @@
 'use strict';
  
 const functions = require('firebase-functions');
+
+const express = require('express');
+const bodyParser = require('body-parser')
+const express = require('express');
+const bodyParser = require('body-parser')
+const express_app = express();
+
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion} = require('dialogflow-fulfillment');
  
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
  
-exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
+express_app.get('/', (request, response)) => {
   const agent = new WebhookClient({ request, response });
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
@@ -30,3 +37,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   // intentMap.set('your intent name here', googleAssistantHandler);
   agent.handleRequest(intentMap);
 });
+
+express_app.use(bodyParser.urlencoded({ extended: true }));
+express_app.use(bodyParser.json({type: 'application/json'}));
+express_app.post('/', app);
+express_app.listen(8080);
